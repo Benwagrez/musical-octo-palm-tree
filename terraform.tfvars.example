@@ -1,0 +1,8 @@
+log_bucket = "<bucket-name>"
+log_bucket_location = "/log/location/in/bucket"
+athena_table_name = "alb_logs_table"
+ses_email = "example@gmail.com"
+region         = "<AWS-region>"
+
+AWS_ACCESS_KEY = "<AWS-access-key>"
+AWS_SECRET_KEY = "<AWS-secret-key>"

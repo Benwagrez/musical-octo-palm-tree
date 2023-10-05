@@ -35,4 +35,4 @@ terraform.rc
 
 # Ignore Packages
 packages/*
-deployment.zip
+lambda_function_payload.zip

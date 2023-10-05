@@ -1,18 +1,22 @@
 import time
 import boto3
 import json
+import os
 import csv
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from ipwhois import IPWhois
 
-query = 'SELECT distinct client_ip, count() as count from alb_logs WHERE (parse_datetime(time,\'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSSSSS\'\'Z\') >= date_add(\'day\', -1, current_timestamp)) GROUP by client_ip ORDER by count() DESC;'
-DATABASE = 'alb_db'
-bucketname='octovmwebsitearm'
-output='s3://'+bucketname+'/alb/QueryResults/'
+tablecreate   = os.environ["athena_query_table_create"]
+visitorquery  = os.environ["athena_query_visitor_query"] # 'SELECT distinct client_ip, count() as count from alb_logs WHERE (parse_datetime(time,\'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSSSSS\'\'Z\') >= date_add(\'day\', -1, current_timestamp)) GROUP by client_ip ORDER by count() DESC;'
+database      = os.environ["athena_db"] # 'alb_db'
+workgroup     = os.environ["athena_wg"]
+email         = os.environ["ses_email"]
+bucketname    = os.environ["bucketname"] # 'octovmwebsitearm'
+output        ='s3://'+bucketname+'/alb/QueryResults/'# Where Athena query results will be stored
 email_subject = ''
-email_body = ''
+email_body    = ''
 
 def lambda_handler(event, context):
 
@@ -24,8 +28,6 @@ def lambda_handler(event, context):
     if(query_success['ResponseMetadata']['HTTPStatusCode'] == 200):
         email_success = email_visitors(query_success['QueryExecutionId'])
     
-    print(query_success)
-    print(email_success)
     
     return {
         'statusCode': 200,
@@ -36,14 +38,28 @@ def lambda_handler(event, context):
 def query_visitors():
     client = boto3.client('athena')
     
-    response = client.start_query_execution(
-        QueryString=query,
+    # Running query to create table if it does not exist
+    tb_response = client.start_query_execution(
+        QueryString=tablecreate,
         QueryExecutionContext={
-            'Database': DATABASE
+            'Database': database
         },
         ResultConfiguration={
             'OutputLocation': output,
-        }
+        },
+        WorkGroup=workgroup
+    )
+
+    # Running query to grab all visitors
+    response = client.start_query_execution(
+        QueryString=visitorquery,
+        QueryExecutionContext={
+            'Database': database
+        },
+        ResultConfiguration={
+            'OutputLocation': output,
+        },
+        WorkGroup=workgroup
     )
     print(response)
     return response
@@ -80,7 +96,7 @@ def email_visitors(QueryExecutionId):
     <body>
     <h1>Viewer Insights</h1>
     <br>
-    Here are the people that visited your website.
+    Listed below are the people that visited your website.
     <table>
       <tr>
         <th>IP</th>
