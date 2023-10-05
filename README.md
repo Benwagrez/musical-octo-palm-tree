@@ -20,19 +20,13 @@ Below details will be given regarding the Lambda deployment including deployment
         <th>Status</th><th>Deployment Cost</th>
     </tr>
     <tr>
-        <td>WIP</td><td>Minor S3 storage costs / CloudFront Dist costs</td>
+        <td>Functional</td><td>Minor S3 storage costs / CloudFront Dist costs</td>
     </tr>
 </table>
-
-The architecture diagram for this diagram is displayed below:
-WIP
-
 Terraform Module:
 module.lambda_deployment
 
-The Python code relies on the ipwhois function. Below, the dict structure of the ipwhois output is displayed:
-WIP
-
+The Python code relies on the ipwhois function. In the link attached, the dict structure of the ipwhois output is shown:
 https://ipwhois.readthedocs.io/en/latest/RDAP.html
 
 
@@ -41,7 +35,7 @@ The following script is made for ease of management: package.sh
 This script will be explained below.
 
 ### package.sh
-Packages the python code and libraries into a deployment zip and launches a terraform apply.
+Packages the python code and libraries into a deployment zip and launches a terraform apply. The deployment zip is then deleted after the Terraform apply, but the libraries are retained.
 
 ## Contact
 Reach out to me below for any questions:
