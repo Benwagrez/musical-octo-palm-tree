@@ -1,6 +1,6 @@
 # musical-octo-palm-tree
 
-Hey everyone! Welcome to my musical octo palm tree. This repository holds a lambda function deployment that monitors traffic to an application load balancer. Lets dive into it.
+Hey everyone! Welcome to my Visitor Notification System. This repository holds a lambda function deployment that monitors traffic to an application load balancer. Lets dive into it.
 
 ## Prerequisites
 The following items are prerequisites for this deployment.
@@ -26,8 +26,7 @@ Below details will be given regarding the Lambda deployment including deployment
 Terraform Module:
 module.lambda_deployment
 
-The Python code relies on the ipwhois function. In the link attached, the dict structure of the ipwhois output is shown:
-https://ipwhois.readthedocs.io/en/latest/RDAP.html
+The Python code relies on the ipwhois function. In the link attached, the dict structure of the ipwhois output is shown [here](https://ipwhois.readthedocs.io/en/latest/RDAP.html):
 
 
 ## Scripts
@@ -36,6 +35,10 @@ This script will be explained below.
 
 ### package.sh
 Packages the python code and libraries into a deployment zip and launches a terraform apply. The deployment zip is then deleted after the Terraform apply, but the libraries are retained.
+
+## Licensing
+
+Everything is licensed under the MIT license, feel free to repurpose my code for whatever you'd like.
 
 ## Contact
 Reach out to me below for any questions:
